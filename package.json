@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "netlify-cli": "*"
+  },
+  "scripts": {
+    "start": "netlify dev"
+  }
+}
