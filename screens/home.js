@@ -7,21 +7,15 @@ customElements.define(
     constructor() {
       super();
       this.attachShadow({ mode: "open" });
-      this.images = [
-        "https://placekitten.com/400/500",
-        "https://placekitten.com/400/501",
-        "https://placekitten.com/400/502",
-        "https://placekitten.com/400/503",
-        "https://placekitten.com/400/504",
-        "https://placekitten.com/400/505",
-        "https://placekitten.com/400/506",
-        "https://placekitten.com/400/507",
-        "https://placekitten.com/400/508",
-        "https://placekitten.com/400/509",
-        "https://placekitten.com/400/510",
-        "https://placekitten.com/400/511",
-        "https://placekitten.com/400/512",
-      ];
+      const dogDomain = "place.dog";
+      const catDomain = "placekitten.com";
+      const domain = Math.round(Math.random()) ? catDomain : dogDomain;
+      this.images = [];
+      for (let step=0; step < 10; step++) {
+        const width = Math.floor(Math.random() * (600 - 400 + 1) + 400);
+        const height = Math.floor(Math.random() * (600 - 400 + 1) + 400);
+        this.images.push(`http://${domain}/${width}/${height}`);
+      }
     }
     async connectedCallback() {
       this.render();
