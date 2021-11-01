@@ -14,17 +14,27 @@ customElements.define(
     }
     render() {
       this.shadowRoot.innerHTML = `
-      <wc-header>
-        <slot slot="title" name="title">
-          Default Base Layout Header Title
-        </slot>
-      </wc-header>
-      <wc-main>
-        <slot slot="content" name="content">
-          Default Base Layout Main Content
-        </slot>
-      </wc-main>
-      <wc-footer></wc-footer>
+      <style type="text/css">
+      #container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 100vh;
+      }
+      </style>
+      <div id="container">
+        <wc-header>
+          <slot slot="title" name="title">
+            Default Base Layout Header Title
+          </slot>
+        </wc-header>
+        <wc-main>
+          <slot slot="content" name="content">
+            Default Base Layout Main Content
+          </slot>
+        </wc-main>
+        <wc-footer></wc-footer>
+      </div>
       `;
     }
   },
