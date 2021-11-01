@@ -6,6 +6,7 @@ customElements.define(
       this.attachShadow({ mode: 'open' });
     }
     async connectedCallback() {
+      // React: componentWillMount() / useEffect()
       this.render();
     }
     render() {
