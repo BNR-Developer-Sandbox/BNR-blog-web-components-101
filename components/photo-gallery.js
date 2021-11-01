@@ -4,44 +4,55 @@ customElements.define(
     constructor() {
       super();
       this.attachShadow({ mode: "open" });
+      this.handleClick = this.handleClick.bind(this);
     }
     static get observedAttributes() {
       return ["images", "current"];
     }
     get images() {
       const attribute = this.getAttribute("images");
-      console.log(attribute);
-      const json = JSON.parse(attribute);
-      console.log(json);
-      return json;
+      return JSON.parse(attribute);
     }
     set images(json) {
-      console.log(json);
       const str = JSON.stringify(json);
-      console.log(str);
       this.setAttribute("images", str);
     }
 
     get current() {
       const attribute = this.getAttribute("current");
-      return parseInt(attribute);
+      return parseInt(attribute, 10);
     }
 
     set current(int) {
-      console.log("int", int);
       this.setAttribute("current", int.toString());
     }
 
     async connectedCallback() {
-      console.log("connectedCallback", this.images);
       this.render();
     }
-    disconnectedCallback() {}
+    disconnectedCallback() {
+    }
     attributeChangedCallback(attrName, oldVal, newVal) {
       this.render();
     }
 
+    getImageClass(index) {
+        if (this.current === index) {
+            return "current";
+        } else if (this.current - 1 === index) {
+            return "previous";
+        } else if (this.current + 1 === index) {
+            return "next";
+        }
+        return "";
+    }
+
+    handleClick(e) {
+        this.current = e.target.getAttribute("data-index");
+    }
+
     render() {
+      this.shadowRoot.getElementById("list")?.removeEventListener("click", this.handleClick, true);
       this.shadowRoot.innerHTML = `
       <style type="text/css">
         ol {
@@ -74,50 +85,14 @@ customElements.define(
       <ol id="list">
         ${this.images
           .map((image, index) => {
-            console.log(
-              "image",
-              image,
-              "index",
-              index,
-              "this.current",
-              this.current
-            );
-            let className = "";
-            let handler = null;
-            if (this.current === index) {
-              className = "current";
-            } else if (this.current - 1 === index) {
-              className = "previous";
-            } else if (this.current + 1 === index) {
-              className = "next";
-            } else {
-              className = "";
-            }
             return `
-          <li class="${className}">
+          <li class="${this.getImageClass(index)}">
             <img src="${image}" data-index="${index}" />
           </li>`;
           })
           .join("")}
-        <!--
-        <li class="current">
-          <img src="https://placekitten.com/500/501" />
-        </li>
-        <li class="next">
-          <img src="https://placekitten.com/500/502" />
-        </li>
-        <li>
-          <img src="https://placekitten.com/500/503" />
-        </li>
-        -->
       </ol>`;
-      this.shadowRoot.getElementById("list").addEventListener(
-        "click",
-        (e) => {
-          this.current = e.target.getAttribute("data-index");
-        },
-        true
-      );
+      this.shadowRoot.getElementById("list").addEventListener("click", this.handleClick, true);
     }
   }
 );
