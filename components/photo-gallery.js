@@ -68,6 +68,13 @@ customElements.define(
         li {
           display: none;
         }
+        li.placeholder {
+          display: flex;
+          height: 500px;
+          width: 500px;
+          transform: scale(0.5);
+          opacity: 0.5;
+        }
         li.previous {
           display: flex;
           transform: scale(0.5);
@@ -83,6 +90,7 @@ customElements.define(
         }
       </style>
       <ol id="list">
+        ${this.current === 0 ? `<li class="placeholder"></li>` : ""}
         ${this.images
           .map((image, index) => {
             return `
@@ -91,6 +99,7 @@ customElements.define(
           </li>`;
           })
           .join("")}
+        ${this.current === this.images.length - 1 ? `<li class="placeholder"></li>` : ""}
       </ol>`;
       this.shadowRoot.getElementById("list").addEventListener("click", this.handleClick, true);
     }
