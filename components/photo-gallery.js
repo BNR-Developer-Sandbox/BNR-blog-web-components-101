@@ -94,8 +94,8 @@ customElements.define(
               className = "";
             }
             return `
-          <li class="${className}" data-index="${index}">
-            <img src="${image}" />
+          <li class="${className}">
+            <img src="${image}" data-index="${index}" />
           </li>`;
           })
           .join("")}
@@ -114,8 +114,7 @@ customElements.define(
       this.shadowRoot.getElementById("list").addEventListener(
         "click",
         (e) => {
-          console.log("event", e);
-          this.current = e.composedPath()[1].getAttribute("data-index");
+          this.current = e.target.getAttribute("data-index");
         },
         true
       );
