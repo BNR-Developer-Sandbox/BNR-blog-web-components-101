@@ -4,8 +4,29 @@ customElements.define(
     constructor() {
       super();
       this.attachShadow({ mode: 'open' });
+      this.currentImage = 0;
+    }
+    static get observedAttributes() { return ["images"]; }
+    get images() {
+      const attribute = this.getAttribute("images");
+      console.log(attribute);
+      const json = JSON.parse(attribute);
+      console.log(json);
+      return json;
+    }
+    set images(json) {
+      console.log(json);
+      const str = JSON.stringify(json);
+      console.log(str);
+      this.setAttribute("images", str);
     }
     async connectedCallback() {
+      console.log("connectedCallback", this.images);
+      this.render();
+    }
+    disconnectedCallback() {
+    }
+    attributeChangedCallback(attrName, oldVal, newVal) {
       this.render();
     }
     render() {
@@ -39,9 +60,24 @@ customElements.define(
         }
       </style>
       <ol>
-        <li class="previous">
-          <img src="https://placekitten.com/500/500" />
-        </li>
+        ${this.images.map((image, index) => {
+          console.log("image", image, "index", index, "this.currentImage", this.currentImage);
+          let className = "";
+          if (this.currentImage === index) {
+            className = "current"
+          } else if (this.currentImage - 1 === index) {
+            className = "previous"
+          } else if (this.currentImage + 1 === index) {
+            className = "next"
+          } else {
+            className = "";
+          }
+          return `
+          <li class="${className}">
+            <img src="${image}" />
+          </li>`;
+        }).join("")}
+        <!--
         <li class="current">
           <img src="https://placekitten.com/500/501" />
         </li>
@@ -51,6 +87,7 @@ customElements.define(
         <li>
           <img src="https://placekitten.com/500/503" />
         </li>
+        -->
       </ol>`;
     }
   },
