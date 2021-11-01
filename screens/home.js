@@ -22,8 +22,6 @@ customElements.define(
         "https://placekitten.com/400/511",
         "https://placekitten.com/400/512",
       ];
-      console.log("this.images", this.images);
-      console.log("JSON.stringify(this.images)", JSON.stringify(this.images));
     }
     async connectedCallback() {
       this.render();
