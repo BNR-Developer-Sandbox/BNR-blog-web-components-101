@@ -3,12 +3,17 @@ customElements.define(
   class extends HTMLElement {
     constructor() {
       super();
-      console.log("photo-gallery constructor initHandler", this?.initHandler);
     }
 
     async connectedCallback() {
-      console.log("photo-gallery connectedCallback initHandler", this?.initHandler);
-        setTimeout(() => console.log("photo-gallery timeout initHandler", this?.initHandler), 0);
+      this.connected();
+      this.innerHTML = `
+        <ol>
+          <li>prev</li>
+          <li>current</li>
+          <li>next</li>
+        </ol>
+      `;
     }
 
     // TODO click on current image to open lightbox

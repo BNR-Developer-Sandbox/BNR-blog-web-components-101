@@ -15,15 +15,16 @@
         photoGallery.setAttribute('id', 'photo-gallery');
         photoGallery.index = 0;
         photoGallery.images = [];
-        photoGallery.initHandler = () => { console.log("connected"); }
+        photoGallery.connected = () => { console.log("connected"); }
         photoGallery.prev = () => { console.log("prev"); };
         photoGallery.next = () => { console.log("next"); };
         photoGallery.filter = () => { console.log("filter"); }
-        document.querySelector("body").append(photoGallery);
+        document.getElementById("photo-gallery").replaceWith(photoGallery);
     </script>
 </head>
 
 <body>
+    <template id="photo-gallery"></template>
 </body>
 
 </html>
