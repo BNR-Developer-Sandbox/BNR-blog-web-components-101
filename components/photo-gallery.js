@@ -121,18 +121,6 @@ customElements.define(
       console.log("photo-gallery.js.next - override to implement");
     }
 
-    addImages = () => {
-      return this.images.map((image) => {
-        const ol = this.shadowRoot.getElementById("ol");
-        const photo = document.createElement("wc-photo");
-        photo.image = image;
-        photo.onclick = () => console.log("click handler");
-        photo.onprev = () => console.log("prev");
-        photo.onnext = () => console.log("next");
-        ol.appendChild(photo);
-      });
-    };
-
     render() {
       this.shadowRoot.innerHTML = `
         <style>
@@ -154,7 +142,6 @@ customElements.define(
         </style>
         <ol id="list"></ol>
       `;
-      this.addImages();
     }
 
     renderImages() {

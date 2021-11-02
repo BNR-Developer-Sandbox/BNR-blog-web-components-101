@@ -1,5 +1,5 @@
 import "/layouts/base.js";
-import "/components/photo-gallery.js";
+import "/components/photo-gallery-bak.js";
 
 customElements.define(
   "wc-screens-home",
@@ -20,30 +20,9 @@ customElements.define(
     }
     async connectedCallback() {
       const photoGallery = this.shadowRoot.getElementById("photo-gallery");
-      photoGallery.initHandler = this.initHandler;
-      console.log("photoGallery", photoGallery);
-      // this.render();
-    }
-    initHandler() {
-      console.log("initHandler", "foo");
-      return "bar";
+      this.render();
     }
     render() {
-      this.shadowRoot.innerHTML = `
-        <wc-layouts-base>
-          <slot slot="title">Web Components 101</slot>
-          <slot slot="content">
-            <wc-photo-gallery
-              id="photo-gallery"
-              current="0"
-            >
-            </wc-photo-gallery>
-          </slot>
-        </wc-layouts-base>
-      `;
-    }
-    /*
-    renderx() {
       this.shadowRoot.innerHTML = `
         <wc-layouts-base>
           <slot slot="title">Web Components 101</slot>
@@ -60,6 +39,5 @@ customElements.define(
         </wc-layouts-base>
       `;
     }
-    */
   }
 );
