@@ -1,5 +1,5 @@
 import "/layouts/base.js";
-import "/components/photo-gallery.js";
+import "/components/photo-gallery-bak.js";
 
 customElements.define(
   "wc-screens-home",
@@ -16,8 +16,10 @@ customElements.define(
         const height = Math.floor(Math.random() * (600 - 400 + 1) + 400);
         this.images.push(`http://${domain}/${width}/${height}`);
       }
+      this.render();
     }
     async connectedCallback() {
+      const photoGallery = this.shadowRoot.getElementById("photo-gallery");
       this.render();
     }
     render() {
@@ -28,6 +30,9 @@ customElements.define(
             <wc-photo-gallery
               images=${JSON.stringify(this.images)}
               current="0"
+              initHandler
+              prevHandler
+              nextHandler
             >
             </wc-photo-gallery>
           </slot>
