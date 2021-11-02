@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Photo Gallery</title>
+    <!--
+    <link rel="stylesheet" href="/index.css" />
+    -->
+    <script type="module">
+      import "/components/photo.js";
+
+      let startTouchX = null;
+      const onPrev = () => {
+        console.log("prev");
+      };
+
+      const onNext = () => {
+        console.log("next");
+      };
+
+      const photo = document.createElement("wc-photo");
+      photo.setAttribute("id", "photo");
+      photo.image = "https://placekitten.com/560/576";
+      photo.onclick = () => console.log("click handler");
+      photo.ontouchstart = (e) => (startTouchX = e.touches[0].clientX);
+      photo.ontouchend = (e) => {
+        if (Math.abs(startTouchX - e.changedTouches[0].clientX) > 25) {
+          if (startTouchX < e.changedTouches[0].clientX) {
+            onPrev();
+          } else {
+            onNext();
+          }
+        }
+        startTouchX = null;
+      };
+      document.getElementById("photo").replaceWith(photo);
+    </script>
+  </head>
+
+  <body>
+    <template id="photo"></template>
+  </body>
+</html>

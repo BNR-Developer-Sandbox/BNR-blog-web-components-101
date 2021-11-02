@@ -1,39 +1,46 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Photo Gallery</title>
+    <!--
+    <link rel="stylesheet" href="/index.css" />
+    -->
+    <script type="module">
+      import "/components/photo-gallery.js";
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Photo Gallery</title>
-  <!--
-  <link rel="stylesheet" href="/index.css" />
-  -->
-  <script type="module">
-    import "/components/photo-gallery.js";
+      const photoGallery = document.createElement("wc-photo-gallery");
+      photoGallery.setAttribute("id", "photo-gallery");
+      photoGallery.index = 0;
+      photoGallery.images = [];
+      photoGallery.connected = async () => {
+        console.log("connected");
+        const response = await fetch("/api/cats");
+        const json = await response.json();
+        photoGallery.images = json;
+        console.log("html", photoGallery.images);
+      };
+      photoGallery.prev = async () => {
+        console.log("prev");
+        const response = await fetch("/api/cats");
+        const json = await response.json();
+        photoGallery.images = json.concat(photoGallery.images);
+      };
+      photoGallery.next = async () => {
+        console.log("next");
+        const response = await fetch("/api/cats");
+        const json = await response.json();
+        photoGallery.images = photoGallery.images.concat(json);
+      };
+      photoGallery.filter = () => {
+        console.log("filter");
+      };
+      document.getElementById("photo-gallery").replaceWith(photoGallery);
+    </script>
+  </head>
 
-    const photoGallery = document.getElementById("photo-gallery");
-    photoGallery.index = 0;
-    photoGallery.images = [];
-    photoGallery.initHandler = () => { console.log("connected"); }
-    photoGallery.prev = () => { console.log("prev"); };
-    photoGallery.next = () => { console.log("next"); };
-    photoGallery.filter = () => { console.log("filter"); }
-  </script>
-</head>
-
-<body>
-  <wc-photo-gallery
-    id="photo-gallery"
-  >
-    <slot name="script">
-      <template>
-        <script>
-          // TODO could we pass a script via a slot and script tag?
-          // TODO will having it wrapped in a template tag avoid running it?
-        </script>
-      </template>
-    </slot>
-  </wc-photo-gallery>
-</body>
-
+  <body>
+    <template id="photo-gallery"></template>
+  </body>
 </html>
