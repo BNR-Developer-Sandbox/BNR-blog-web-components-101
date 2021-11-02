@@ -16,9 +16,7 @@ customElements.define(
     }
 
     async connectedCallback() {
-      console.log("image", this.image);
       let startTouchX = null;
-
       this.ontouchstart = (e) => (startTouchX = e.touches[0].clientX);
       this.ontouchend = (e) => {
         if (Math.abs(startTouchX - e.changedTouches[0].clientX) > 25) {
@@ -37,13 +35,11 @@ customElements.define(
       this.shadowRoot.innerHTML = `
         <style>
           li {
-            list-style: none;
             display: flex;
             flex: 1;
-            max-width: 100vw;
           }
           li img {
-              width: 100%;
+            width: 100%;
           }
         </style>
           <li>

@@ -11,27 +11,36 @@ customElements.define(
     async connectedCallback() {
       await this.connected();
       this.render();
-      // console.log("js", this.images);
     }
+
+    addImages = () => {
+      return this.images.map((image) => {
+        const ol = this.shadowRoot.getElementById("ol");
+        const photo = document.createElement("wc-photo");
+        photo.image = image;
+        photo.onclick = () => console.log("click handler");
+        photo.onprev = () => console.log("prev");
+        photo.onnext = () => console.log("next");
+        ol.appendChild(photo);
+      });
+    };
 
     render() {
       this.shadowRoot.innerHTML = `
-        <ol>
-          ${this.images
-            .slice(0, 1)
-            .map((image) => {
-              console.log("map start");
-              const photo = document.createElement("wc-photo");
-              photo.image = image;
-              photo.onclick = () => console.log("click handler");
-              photo.onprev = () => console.log("prev");
-              photo.onnext = () => console.log("next");
-              console.log("map end");
-              return photo.outerHTML;
-            })
-            .join("")}
+        <style>
+          ol {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            max-width: 100vw;
+            list-style: none;
+            padding: 0;
+          }
+        </style>
+        <ol id="ol">
         </ol>
       `;
+      this.addImages();
     }
 
     // TODO click on current image to open lightbox
