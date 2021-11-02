@@ -25,11 +25,15 @@
   <wc-photo-gallery
     id="photo-gallery"
   >
-
+    <slot name="script">
+      <template>
+        <script>
+          // TODO could we pass a script via a slot and script tag?
+          // TODO will having it wrapped in a template tag avoid running it?
+        </script>
+      </template>
+    </slot>
   </wc-photo-gallery>
-  <script>
-
-  </script>
 </body>
 
 </html>
