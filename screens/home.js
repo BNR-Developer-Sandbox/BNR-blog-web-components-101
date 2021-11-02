@@ -16,9 +16,17 @@ customElements.define(
         const height = Math.floor(Math.random() * (600 - 400 + 1) + 400);
         this.images.push(`http://${domain}/${width}/${height}`);
       }
+      this.render();
     }
     async connectedCallback() {
-      this.render();
+      const photoGallery = this.shadowRoot.getElementById("photo-gallery");
+      photoGallery.initHandler = this.initHandler;
+      console.log("photoGallery", photoGallery);
+      // this.render();
+    }
+    initHandler() {
+      console.log("initHandler", "foo");
+      return "bar";
     }
     render() {
       this.shadowRoot.innerHTML = `
@@ -26,7 +34,7 @@ customElements.define(
           <slot slot="title">Web Components 101</slot>
           <slot slot="content">
             <wc-photo-gallery
-              images=${JSON.stringify(this.images)}
+              id="photo-gallery"
               current="0"
             >
             </wc-photo-gallery>
@@ -34,5 +42,24 @@ customElements.define(
         </wc-layouts-base>
       `;
     }
+    /*
+    renderx() {
+      this.shadowRoot.innerHTML = `
+        <wc-layouts-base>
+          <slot slot="title">Web Components 101</slot>
+          <slot slot="content">
+            <wc-photo-gallery
+              images=${JSON.stringify(this.images)}
+              current="0"
+              initHandler
+              prevHandler
+              nextHandler
+            >
+            </wc-photo-gallery>
+          </slot>
+        </wc-layouts-base>
+      `;
+    }
+    */
   }
 );
