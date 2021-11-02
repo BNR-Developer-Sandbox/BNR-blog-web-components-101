@@ -11,31 +11,33 @@
       import "/components/photo-gallery.js";
 
       const photoGallery = document.createElement("wc-photo-gallery");
-      photoGallery.setAttribute("id", "photo-gallery");
-      photoGallery.index = 0;
-      photoGallery.images = [];
+
+      // photoGallery.index = 0;
+      // photoGallery.images = [];
+
       photoGallery.connected = async () => {
-        console.log("connected");
         const response = await fetch("/api/cats");
         const json = await response.json();
         photoGallery.images = json;
-        console.log("html", photoGallery.images);
+        photoGallery.index = json.length / 2;
       };
+
       photoGallery.prev = async () => {
-        console.log("prev");
+        console.log("photo-gallery.html.prev");
         const response = await fetch("/api/cats");
         const json = await response.json();
         photoGallery.images = json.concat(photoGallery.images);
+        photoGallery.index = photoGallery.index + json.length;
+        console.log("photo-gallery.html.prev", "set index to", photoGallery.index);
       };
+
       photoGallery.next = async () => {
-        console.log("next");
+        console.log("photo-gallery.html.next");
         const response = await fetch("/api/cats");
         const json = await response.json();
         photoGallery.images = photoGallery.images.concat(json);
       };
-      photoGallery.filter = () => {
-        console.log("filter");
-      };
+
       document.getElementById("photo-gallery").replaceWith(photoGallery);
     </script>
   </head>
