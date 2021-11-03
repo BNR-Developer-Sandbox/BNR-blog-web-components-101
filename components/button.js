@@ -1,27 +1,20 @@
+const template = document.createElement("template");
+template.innerHTML = `
+  <style>
+    button {
+      cursor: pointer;
+    }
+  </style>
+  <button><slot></slot></button>
+`;
+
 customElements.define(
   "wc-button",
   class extends HTMLElement {
     constructor() {
       super();
       this.attachShadow({ mode: "open" });
-    }
-
-    async connectedCallback() {
-      this.render();
-    }
-    attributeChangedCallback(attrName, oldVal, newVal) {
-      this.render();
-    }
-
-    render() {
-      this.shadowRoot.innerHTML = `
-      <style>
-        button {
-          cursor: pointer;
-        }
-      </style>
-      <button><slot></slot></button>
-      `;
+      this.shadowRoot.appendChild(template.content.cloneNode(true));
     }
   }
 );

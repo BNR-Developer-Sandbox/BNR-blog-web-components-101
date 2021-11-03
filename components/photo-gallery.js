@@ -1,12 +1,55 @@
 import "./photo-gallery-item.js";
 import "./button.js";
 
+const template = document.createElement("template");
+template.innerHTML = `
+        <style id="style">
+        #container {
+          display: flex;
+          flex-direction: row;
+          flex: 1;
+          align-items: center;
+          width: 100%;
+          height: 100%;
+        }
+        @media (hover: none) and (pointer: coarse) { /* touch */
+          #prev {
+            display: none;
+          }
+          #next {
+            display: none;
+          }
+        }
+        #photos {
+          display: flex;
+          flex: 1;
+          overflow: hidden;
+        }
+        #photos::slotted(*) {
+          display: none;
+        }
+        #photos::slotted(:nth-child(1)) {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
+        }
+        </style>
+        <div id="container">
+          <wc-button id="prev">👈</wc-button>
+          <slot id="photos"></slot>
+          <wc-button id="next">👉</wc-button>
+        </div>
+      `;
+
 customElements.define(
   "wc-photo-gallery",
   class extends HTMLElement {
     constructor() {
       super();
       this.attachShadow({ mode: "open" });
+
+      this.shadowRoot.appendChild(template.content.cloneNode(true));
 
       this.touchStartX = null;
 
@@ -29,13 +72,17 @@ customElements.define(
     get index() {
       return parseInt(this.getAttribute("index"), 10);
     }
-
-    async connectedCallback() {
-      this.render();
-    }
     attributeChangedCallback(attrName, oldVal, newVal) {
-      // console.log("attrName", attrName, "oldVal", oldVal, "newVal", newVal);
-      this.render();
+      if (attrName === "index") {
+        const style = this.shadowRoot.getElementById("style");
+        const styleRule = [...style.sheet.cssRules].find(
+          (item) => item.selectorText && item.selectorText.includes("nth")
+        );
+        styleRule.selectorText = styleRule.selectorText.replace(
+          `:nth-child(${oldVal})`,
+          `:nth-child(${newVal})`
+        );
+      }
     }
     disconnectedCallback() {
       this.removeEventListener("click", this.onclick);
@@ -98,48 +145,6 @@ customElements.define(
 
     fetchNext() {
       console.log("photo-gallery.js: fetchNext() - override to implement");
-    }
-
-    render() {
-      this.shadowRoot.innerHTML = `
-        <style>
-        #container {
-          display: flex;
-          flex-direction: row;
-          flex: 1;
-          align-items: center;
-          width: 100%;
-          height: 100%;
-        }
-        @media (hover: none) and (pointer: coarse) { /* touch */
-          #prev {
-            display: none;
-          }
-          #next {
-            display: none;
-          }
-        }
-        #photos {
-          display: flex;
-          flex: 1;
-          overflow: hidden;
-        }
-        #photos::slotted(*) {
-          display: none;
-        }
-        #photos::slotted(:nth-child(${this.index})) {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          width: 100%;
-        }
-        </style>
-        <div id="container">
-          <wc-button id="prev">👈</wc-button>
-          <slot id="photos"></slot>
-          <wc-button id="next">👉</wc-button>
-        </div>
-      `;
     }
   }
 );

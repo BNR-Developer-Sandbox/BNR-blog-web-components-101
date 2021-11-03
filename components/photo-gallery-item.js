@@ -1,12 +1,23 @@
 import "./photo.js";
 import "./fact.js";
 
+const template = document.createElement("template");
+template.innerHTML = `
+  <wc-photo image="" id="photo"></wc-photo>
+  <wc-fact fact="" id="fact"></wc-fact>
+`;
+
 customElements.define(
   "wc-photo-gallery-item",
   class extends HTMLElement {
     constructor() {
       super();
       this.attachShadow({ mode: "open" });
+      this.shadowRoot.appendChild(template.content.cloneNode(true));
+      this.photoEl = this.shadowRoot.getElementById("photo");
+      this.photoEl.image = this.image;
+      this.factEl = this.shadowRoot.getElementById("fact");
+      this.factEl.fact = this.fact;
     }
     static get observedAttributes() {
       return ["image", "fact"];
@@ -24,19 +35,13 @@ customElements.define(
     get fact() {
       return this.getAttribute("fact");
     }
-
-    async connectedCallback() {
-      this.render();
-    }
     attributeChangedCallback(attrName, oldVal, newVal) {
-      this.render();
-    }
-
-    render() {
-      this.shadowRoot.innerHTML = `
-      <wc-photo image="${this.image}"></wc-photo>
-      <wc-fact fact="${this.fact}"></wc-fact>
-      `;
+      if (attrName === "image") {
+        this.photoEl.image = newVal;
+      }
+      if (attrName === "fact") {
+        this.factEl.fact = newVal;
+      }
     }
   }
 );
