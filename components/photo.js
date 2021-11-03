@@ -1,9 +1,22 @@
+const template = document.createElement("template");
+template.innerHTML = `
+  <style>
+    img {
+        width: 100%;
+    }
+  </style>
+  <img src="https://placekitten.com/400/500" id="image" />
+`;
+
 customElements.define(
   "wc-photo",
   class extends HTMLElement {
     constructor() {
       super();
       this.attachShadow({ mode: "open" });
+      this.shadowRoot.appendChild(template.content.cloneNode(true));
+      this.imageEl = this.shadowRoot.getElementById("image");
+      this.imageEl.src = this.image;
     }
     static get observedAttributes() {
       return ["image"];
@@ -14,28 +27,9 @@ customElements.define(
     get image() {
       return this.getAttribute("image");
     }
-
-    async connectedCallback() {
-      this.render();
-    }
     attributeChangedCallback(attrName, oldVal, newVal) {
-      this.render();
-    }
-
-    render() {
-      if (this.image && this.image !== "undefined") {
-        this.shadowRoot.innerHTML = `
-        <style>
-          img {
-              width: 100%;
-          }
-        </style>
-        <img src="${this.image}" />
-        `;
-      } else {
-        this.shadowRoot.innerHTML = `
-        <b>no image</b>
-        `;
+      if (attrName === "image") {
+        this.imageEl.src = newVal;
       }
     }
   }

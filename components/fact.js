@@ -1,9 +1,22 @@
+const template = document.createElement("template");
+template.innerHTML = `
+  <style>
+    p {
+        width: 100%;
+    }
+  </style>
+  <p id="fact">Default Fact</p>
+`;
+
 customElements.define(
   "wc-fact",
   class extends HTMLElement {
     constructor() {
       super();
       this.attachShadow({ mode: "open" });
+      this.shadowRoot.appendChild(template.content.cloneNode(true));
+      this.factEl = this.shadowRoot.getElementById("fact");
+      this.factEl.textContent = this.fact;
     }
     static get observedAttributes() {
       return ["fact"];
@@ -14,23 +27,10 @@ customElements.define(
     get fact() {
       return this.getAttribute("fact");
     }
-
-    async connectedCallback() {
-      this.render();
-    }
     attributeChangedCallback(attrName, oldVal, newVal) {
-      this.render();
-    }
-
-    render() {
-      this.shadowRoot.innerHTML = `
-      <style>
-        p {
-            width: 100%;
-        }
-      </style>
-      <p>${this.fact}</p>
-      `;
+      if (attrName === "fact") {
+        this.factEl.textContent = newVal;
+      }
     }
   }
 );
