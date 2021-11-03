@@ -1,4 +1,4 @@
-import "./photo.js";
+import "./photo-gallery-item.js";
 
 customElements.define(
   "wc-photo-gallery",
@@ -145,11 +145,7 @@ customElements.define(
     renderList() {
       return `
       <ol id="list" class="${this.animation}">
-        ${this.renderImage("prev-preload", this.images[this.index - 2])}
-        ${this.renderImage("prev", this.images[this.index - 1])}
-        ${this.renderImage("current", this.images[this.index])}
-        ${this.renderImage("next", this.images[this.index + 1])}
-        ${this.renderImage("next-preload", this.images[this.index + 2])}
+        <slot name="items"></slot>
       </ol>
       `;
     }
@@ -169,8 +165,7 @@ customElements.define(
     }
     render() {
       this.shadowRoot.innerHTML = `
-        ${this.renderStyles()}
-        ${this.renderList()}
+        <slot></slot>
       `;
     }
   }
