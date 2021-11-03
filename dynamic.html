@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dynamic Photo Gallery</title>
+    <link rel="stylesheet" href="index.css" />
+    <script type="module">
+      import "/components/photo-gallery.js";
+
+      const photoGallery = document.getElementById("photo-gallery-dynamic");
+      let catImagesAndFacts = [];
+
+      const render = () => {
+        photoGallery.innerHTML = `
+          ${catImagesAndFacts
+            .map((item) => {
+              return `
+            <wc-photo-gallery-item
+              image="${item.image}"
+              fact="${item.fact}"
+            >
+            </wc-photo-gallery-item>
+            `;
+            })
+            .join("")}
+        `;
+      };
+
+      (async () => {
+        const response = await fetch("/api/cats");
+        const json = await response.json();
+        catImagesAndFacts = catImagesAndFacts.concat(json);
+        render();
+      })();
+
+      photoGallery.fetchPrev = async () => {
+        const response = await fetch("/api/cats");
+        const json = await response.json();
+        catImagesAndFacts = json.concat(catImagesAndFacts);
+        photoGallery.index = photoGallery.index + json.length + 1;
+        render();
+      };
+
+      photoGallery.fetchNext = async () => {
+        const response = await fetch("/api/cats");
+        const json = await response.json();
+        catImagesAndFacts = catImagesAndFacts.concat(json);
+        render();
+      };
+    </script>
+  </head>
+
+  <body>
+    <wc-photo-gallery id="photo-gallery-dynamic">
+    </wc-photo-gallery>
+  </body>
+</html>

@@ -5,15 +5,6 @@ customElements.define(
       super();
       this.attachShadow({ mode: "open" });
     }
-    // static get observedAttributes() {
-    //   return ["label"];
-    // }
-    // set label(str) {
-    //   this.setAttribute("label", str);
-    // }
-    // get label() {
-    //   return this.getAttribute("label");
-    // }
 
     async connectedCallback() {
       this.render();
@@ -26,7 +17,7 @@ customElements.define(
       this.shadowRoot.innerHTML = `
       <style>
         button {
-          width: 100%;
+          cursor: pointer;
         }
       </style>
       <button><slot></slot></button>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Static Photo Gallery</title>
+    <link rel="stylesheet" href="index.css" />
+    <script type="module">
+      import "/components/photo-gallery.js";
+    </script>
+  </head>
+
+  <body>
+    <wc-photo-gallery>
+      <wc-photo-gallery-item
+        image="https://placekitten.com/400/400"
+        fact="While many cats enjoy milk, it will give some cats diarrhea."
+      >
+      </wc-photo-gallery-item>
+      <wc-photo-gallery-item
+        image="https://placekitten.com/500/500"
+        fact="When a cat drinks, its tongue - which has tiny barbs on it - scoops the liquid up backwards."
+      >
+      </wc-photo-gallery-item>
+      <wc-photo-gallery-item
+        image="https://placekitten.com/600/600"
+        fact="Cats step with both left legs, then both right legs when they walk or run."
+      >
+      </wc-photo-gallery-item>
+    </wc-photo-gallery>
+  </body>
+</html>

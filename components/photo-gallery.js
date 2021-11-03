@@ -124,10 +124,10 @@ customElements.define(
           flex: 1;
           overflow: hidden;
         }
-        ::slotted(*) {
+        #photos::slotted(*) {
           display: none;
         }
-        ::slotted(:nth-child(${this.index})) {
+        #photos::slotted(:nth-child(${this.index})) {
           display: flex;
           flex-direction: column;
           align-items: center;
