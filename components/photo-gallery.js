@@ -20,17 +20,12 @@ customElements.define(
       if (!this.hasAttribute("images")) {
         this.images = [];
       }
-
-      if (!this.hasAttribute("animation")) {
-        this.animation = "";
-      }
     }
 
     static get observedAttributes() {
       return [
         "index",
         "images",
-        "animation",
       ];
     }
 
@@ -48,22 +43,11 @@ customElements.define(
       return JSON.parse(this.getAttribute("images"));
     }
 
-    set animation(str) {
-      this.setAttribute("animation", str);
-    }
-    get animation() {
-      return this.getAttribute("animation");
-    }
-
     async connectedCallback() {
       this.render();
     }
     attributeChangedCallback(attrName, oldVal, newVal) {
-      console.log(
-        "attrName", attrName,
-        "oldVal", oldVal,
-        "newVal", newVal,
-      );
+      // console.log("attrName", attrName, "oldVal", oldVal, "newVal", newVal);
       this.render();
     }
     disconnectedCallback() {
@@ -104,34 +88,22 @@ customElements.define(
     }
 
     increment() {
-      const duration = 1000;
       const max = this.images.length - 1;
       const next = this.index + 1;
       const index = Math.min(max, next);
       if (index > this.index) {
-        setTimeout(() => {
-          console.log("increment animation end");
-          this.animation = "";
-          this.index = index;
-        }, duration);
-        this.animation = "increment";
+        this.index = index;
       }
       if (next >= max) {
         this.fetchNext();
       }
     }
     decrement() {
-      const duration = 1000;
       const min = 0;
       const prev = this.index - 1;
       const index = Math.max(min, prev);
       if (index < this.index) {
-        setTimeout(() => {
-          console.log("decrement animation end");
-          this.animation = "";
-          this.index = index;
-        }, duration);
-        this.animation = "decrement";
+        this.index = index;
       }
       if (prev <= min) {
         this.fetchPrev();
@@ -147,8 +119,6 @@ customElements.define(
     }
 
     renderStyles() {
-      const duration = "1s";
-      const timing = "ease-in-out";
       return `
       <style>
       ol {
@@ -165,133 +135,9 @@ customElements.define(
       li {
         max-width: 100vw;
       }
+      li#prev, li#next,
       li#prev-preload, li#next-preload {
         flex: 0;
-        opacity: 0.0;
-        transform: scale(0.0);
-      }
-
-      @media (pointer: fine) { /* mouse */
-        li#prev, li#next {
-          opacity: 0.5;
-          transform: scale(0.5);
-          cursor: pointer;
-        }
-
-        @keyframes decrement {
-          from { left: 0; }
-          to { left: 1%; }
-        }
-        @keyframes increment {
-          from { right: 0; }
-          to { right: 1%; }
-        }
-
-        @keyframes scaleUp {
-          0% {
-            transform: scale(0.5);
-            opacity: 0.5;
-          }
-          100% {
-            transform: scale(1.0);
-            opacity: 1.0;
-          }
-        }
-        @keyframes scaleDown {
-          0% {
-            transform: scale(1.0);
-            opacity: 1.0;
-          }
-          100% {
-            transform: scale(0.5);
-            opacity: 0.5;
-          }
-        }
-        @keyframes scaleOut {
-          0% {
-            flex: 1;
-            transform: scale(0.5);
-            opacity: 0.5;
-          }
-          100% {
-            flex: 0;
-            transform: scale(0.0);
-            opacity: 0.0;
-          }
-        }
-        @keyframes scaleIn {
-          0% {
-            flex: 0;
-            transform: scale(0.0);
-            opacity: 0.0;
-          }
-          100% {
-            flex: 1;
-            transform: scale(0.5);
-            opacity: 0.5;
-          }
-        }
-
-        ol#list.decrement {
-          animation-timing-function: ${timing};
-          animation-name: decrement;
-          animation-duration: ${duration};
-        }
-        ol#list.decrement li#prev-preload {
-          animation-timing-function: ${timing};
-          animation-name: scaleIn;
-          animation-duration: ${duration};
-        }
-        ol#list.decrement li#prev {
-          animation-timing-function: ${timing};
-          animation-name: scaleUp;
-          animation-duration: ${duration};
-        }
-        ol#list.decrement li#current {
-          animation-timing-function: ${timing};
-          animation-name: scaleDown;
-          animation-duration: ${duration};
-        }
-        ol#list.decrement li#next {
-          animation-timing-function: ${timing};
-          animation-name: scaleOut;
-          animation-duration: ${duration};
-        }
-
-        ol#list.increment {
-          animation-timing-function: ${timing};
-          animation-name: increment;
-          animation-duration: ${duration};
-        }
-        ol#list.increment li#prev {
-          animation-timing-function: ${timing};
-          animation-name: scaleOut;
-          animation-duration: ${duration};
-        }
-        ol#list.increment li#current {
-          animation-timing-function: ${timing};
-          animation-name: scaleDown;
-          animation-duration: ${duration};
-        }
-        ol#list.increment li#next {
-          animation-timing-function: ${timing};
-          animation-name: scaleUp;
-          animation-duration: ${duration};
-        }
-        ol#list.increment li#next-preload {
-          animation-timing-function: ${timing};
-          animation-name: scaleIn;
-          animation-duration: ${duration};
-        }
-      }
-
-      @media (hover: none) and (pointer: coarse) { /* touch */
-        li#prev {
-          display: none;
-        }
-        li#next {
-          display: none;
-        }
       }
       </style>
       `;
@@ -299,7 +145,7 @@ customElements.define(
     renderList() {
       return `
       <ol id="list" class="${this.animation}">
-      ${this.renderImage("prev-preload", this.images[this.index - 2])}
+        ${this.renderImage("prev-preload", this.images[this.index - 2])}
         ${this.renderImage("prev", this.images[this.index - 1])}
         ${this.renderImage("current", this.images[this.index])}
         ${this.renderImage("next", this.images[this.index + 1])}
