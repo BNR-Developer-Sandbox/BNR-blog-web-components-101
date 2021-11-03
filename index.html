@@ -7,14 +7,24 @@
     <script type="module">
       import "/components/photo-gallery.js";
 
-      // const photoGallery = document.getElementById("photo-gallery");
+      const photoGallery = document.getElementById("photo-gallery-dynamic");
 
-      // (async () => {
-      //   const response = await fetch("/api/cats");
-      //   const json = await response.json();
-      //   photoGallery.images = json;
-      //   photoGallery.index = json.length / 2;
-      // })();
+      (async () => {
+        const response = await fetch("/api/cats");
+        const json = await response.json();
+        photoGallery.innerHTML = `
+          ${json.map((item) => {
+            return `
+            <wc-photo-gallery-item
+              image="${item.image}"
+              fact="${item.fact}"
+            >
+            </wc-photo-gallery-item>
+            `;
+          }).join("")}
+        `;
+        // photoGallery.index = json.length / 2;
+      })();
 
       // photoGallery.fetchPrev = async () => {
       //   const response = await fetch("/api/cats");
@@ -32,7 +42,11 @@
   </head>
 
   <body>
-    <wc-photo-gallery id="photo-gallery">
+    <wc-photo-gallery id="photo-gallery-dynamic">
+    </wc-photo-gallery>
+
+    <!--
+    <wc-photo-gallery id="photo-gallery-static">
       <wc-photo-gallery-item
         image="https://placekitten.com/483/440"
         fact="While many cats enjoy milk, it will give some cats diarrhea."
@@ -49,5 +63,6 @@
       >
       </wc-photo-gallery-item>
     </wc-photo-gallery>
+    -->
   </body>
 </html>

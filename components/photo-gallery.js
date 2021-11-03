@@ -1,4 +1,5 @@
 import "./photo-gallery-item.js";
+import "./button.js";
 
 customElements.define(
   "wc-photo-gallery",
@@ -14,19 +15,12 @@ customElements.define(
       this.addEventListener("touchend", this.ontouchend);
 
       if (!this.hasAttribute("index")) {
-        this.index = 0;
-      }
-
-      if (!this.hasAttribute("images")) {
-        this.images = [];
+        this.index = 1;
       }
     }
 
     static get observedAttributes() {
-      return [
-        "index",
-        "images",
-      ];
+      return ["index"];
     }
 
     set index(int) {
@@ -34,13 +28,6 @@ customElements.define(
     }
     get index() {
       return parseInt(this.getAttribute("index"), 10);
-    }
-
-    set images(arr) {
-      this.setAttribute("images", JSON.stringify(arr));
-    }
-    get images() {
-      return JSON.parse(this.getAttribute("images"));
     }
 
     async connectedCallback() {
@@ -118,54 +105,36 @@ customElements.define(
       console.log("photo-gallery.js: fetchNext() - override to implement");
     }
 
-    renderStyles() {
-      return `
-      <style>
-      ol {
-        position: relative;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: row;
-        flex: 1;
-        align-items: center;
-        max-width: 100vw;
-      }
-      li {
-        max-width: 100vw;
-      }
-      li#prev, li#next,
-      li#prev-preload, li#next-preload {
-        flex: 0;
-      }
-      </style>
-      `;
-    }
-    renderList() {
-      return `
-      <ol id="list" class="${this.animation}">
-        <slot name="items"></slot>
-      </ol>
-      `;
-    }
-    renderImage(id, image) {
-      if (image) {
-        return `
-        <li id="${id}">
-          <wc-photo
-            id="${id}-photo"
-            image="${image}"
-          ></wc-photo>
-        </li>
-        `;
-      } else {
-        return "";
-      }
-    }
     render() {
       this.shadowRoot.innerHTML = `
-        <slot></slot>
+        <style>
+        #container {
+          display: flex;
+          flex-direction: row;
+          flex: 1;
+          align-items: center;
+          width: 100%;
+        }
+        #photos {
+          display: flex;
+          flex: 1;
+          overflow: hidden;
+        }
+        ::slotted(*) {
+          display: none;
+        }
+        ::slotted(:nth-child(${this.index})) {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
+        }
+        </style>
+        <div id="container">
+          <wc-button>👈</wc-button>
+          <slot id="photos"></slot>
+          <wc-button>👉</wc-button>
+        </div>
       `;
     }
   }
