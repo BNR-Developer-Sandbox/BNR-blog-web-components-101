@@ -6,23 +6,32 @@ customElements.define(
     constructor() {
       super();
       this.attachShadow({ mode: "open" });
-      // this.loading = true;
-      // this.index = 0;
-      // this.images = [];
-      // this._click = () => { console.log("photo-gallery.js.click"); };
-      // this._prev = () => { console.log("photo-gallery.js.prev"); };
-      // this._next = () => { console.log("photo-gallery.js.next"); };
+
+      this.touchStartX = null;
+
+      this.addEventListener("click", this.onclick);
+      this.addEventListener("touchstart", this.ontouchstart);
+      this.addEventListener("touchend", this.ontouchend);
+
+      if (!this.hasAttribute("index")) {
+        this.index = 0;
+      }
+
+      if (!this.hasAttribute("images")) {
+        this.images = [];
+      }
+
+      if (!this.hasAttribute("animation")) {
+        this.animation = "";
+      }
     }
 
     static get observedAttributes() {
-      return ["loading", "index", "images"];
-    }
-
-    set loading(bool) {
-      this.setAttribute("loading", bool.toString());
-    }
-    get loading() {
-      return this.getAttribute("loading") === "true";
+      return [
+        "index",
+        "images",
+        "animation",
+      ];
     }
 
     set index(int) {
@@ -39,162 +48,284 @@ customElements.define(
       return JSON.parse(this.getAttribute("images"));
     }
 
-    // set click(fn) {
-    //   this._click = fn;
-    // }
-    // get click() {
-    //   return this._click;
-    // }
-    // set prev(fn) {
-    //   this._prev = fn;
-    // }
-    // get prev() {
-    //   return this._prev;
-    // }
-    // set next(fn) {
-    //   this._next = fn;
-    // }
-    // get next() {
-    //   return this._next;
-    // }
+    set animation(str) {
+      this.setAttribute("animation", str);
+    }
+    get animation() {
+      return this.getAttribute("animation");
+    }
 
     async connectedCallback() {
-      this.loading = true;
-
-      await this.connected();
-
-      // this.onclick = this.click;
-      // this.addTouchEvents();
-
-      // console.log("connectedCallback", this.index, this.images);
-
       this.render();
-      this.renderImages();
-
-      this.loading = false;
     }
     attributeChangedCallback(attrName, oldVal, newVal) {
-      // console.log(this.loading);
-      if (!this.loading) {
-        // console.log("attrName", attrName, "oldVal", oldVal, "newVal", newVal);
-        const shouldRenderImages = (
-          (attrName === "index") ||
-          (attrName === "images" && newVal.length > oldVal.length)
-        );
-        if (shouldRenderImages) {
-          this.renderImages();
-        }
-      }
+      console.log(
+        "attrName", attrName,
+        "oldVal", oldVal,
+        "newVal", newVal,
+      );
+      this.render();
     }
     disconnectedCallback() {
-      // TODO remove event listeners
+      this.removeEventListener("click", this.onclick);
+      this.removeEventListener("touchstart", this.ontouchstart);
+      this.removeEventListener("touchend", this.ontouchend);
     }
 
-    // addTouchEvents() {
-    //   let startTouchX = null;
-    //   this.ontouchstart = (e) => (startTouchX = e.touches[0].clientX);
-    //   this.ontouchend = (e) => {
-    //     if (Math.abs(startTouchX - e.changedTouches[0].clientX) > 25) {
-    //       if (startTouchX < e.changedTouches[0].clientX) {
-    //         const isNearBeginning = true;
-    //         if (isNearBeginning) {
-    //           // this.prev(); // fetch and insert more images
-    //         }
-    //         this.index = this.index - 1;
-    //       } else {
-    //         const isNearEnd = true;
-    //         if (isNearEnd) {
-    //           // this.next(); // fetch and append more images
-    //         }
-    //         this.index = this.index + 1;
-    //       }
-    //     }
-    //     startTouchX = null;
-    //   };
-    // }
-
-    prev() {
-      console.log("photo-gallery.js.prev - override to implement");
+    onclick(event) {
+      const prev = this.shadowRoot.getElementById("prev");
+      const next = this.shadowRoot.getElementById("next");
+      if (event.path.includes(prev)) {
+        this.decrement();
+      }
+      if (event.path.includes(next)) {
+        this.increment();
+      }
     }
 
-    next () {
-      console.log("photo-gallery.js.next - override to implement");
+    ontouchstart(event) {
+      const current = this.shadowRoot.getElementById("current");
+      if (event.path.includes(current)) {
+        const { clientX } = event.changedTouches[0];
+        this.touchStartX = clientX;
+      }
     }
-
-    render() {
-      this.shadowRoot.innerHTML = `
-        <style>
-        ol {
-          list-style: none;
-          margin: 0;
-          padding: 0;
-          display: flex;
-          flex-direction: row;
-          flex: 1;
-          align-items: center;
-          max-width: 100vw;
+    ontouchend(event) {
+      const current = this.shadowRoot.getElementById("current");
+      if (event.path.includes(current)) {
+        const { clientX } = event.changedTouches[0];
+        if (this.touchStartX < clientX) {
+          this.decrement();
+        } else {
+          this.increment();
         }
-        li {
-          display: flex;
-          flex: 1;
-          max-width: 100vw;
+        this.touchStartX = null;
+      }
+    }
+
+    increment() {
+      const duration = 1000;
+      const max = this.images.length - 1;
+      const next = this.index + 1;
+      const index = Math.min(max, next);
+      if (index > this.index) {
+        setTimeout(() => {
+          console.log("increment animation end");
+          this.animation = "";
+          this.index = index;
+        }, duration);
+        this.animation = "increment";
+      }
+      if (next >= max) {
+        this.fetchNext();
+      }
+    }
+    decrement() {
+      const duration = 1000;
+      const min = 0;
+      const prev = this.index - 1;
+      const index = Math.max(min, prev);
+      if (index < this.index) {
+        setTimeout(() => {
+          console.log("decrement animation end");
+          this.animation = "";
+          this.index = index;
+        }, duration);
+        this.animation = "decrement";
+      }
+      if (prev <= min) {
+        this.fetchPrev();
+      }
+    }
+
+    fetchPrev() {
+      console.log("photo-gallery.js: fetchPrev() - override to implement");
+    }
+
+    fetchNext () {
+      console.log("photo-gallery.js: fetchNext() - override to implement");
+    }
+
+    renderStyles() {
+      const duration = "1s";
+      const timing = "ease-in-out";
+      return `
+      <style>
+      ol {
+        position: relative;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+        align-items: center;
+        max-width: 100vw;
+      }
+      li {
+        max-width: 100vw;
+      }
+      li#prev-preload, li#next-preload {
+        flex: 0;
+        opacity: 0.0;
+        transform: scale(0.0);
+      }
+
+      @media (pointer: fine) { /* mouse */
+        li#prev, li#next {
+          opacity: 0.5;
+          transform: scale(0.5);
+          cursor: pointer;
         }
-        </style>
-        <ol id="list"></ol>
+
+        @keyframes decrement {
+          from { left: 0; }
+          to { left: 1%; }
+        }
+        @keyframes increment {
+          from { right: 0; }
+          to { right: 1%; }
+        }
+
+        @keyframes scaleUp {
+          0% {
+            transform: scale(0.5);
+            opacity: 0.5;
+          }
+          100% {
+            transform: scale(1.0);
+            opacity: 1.0;
+          }
+        }
+        @keyframes scaleDown {
+          0% {
+            transform: scale(1.0);
+            opacity: 1.0;
+          }
+          100% {
+            transform: scale(0.5);
+            opacity: 0.5;
+          }
+        }
+        @keyframes scaleOut {
+          0% {
+            flex: 1;
+            transform: scale(0.5);
+            opacity: 0.5;
+          }
+          100% {
+            flex: 0;
+            transform: scale(0.0);
+            opacity: 0.0;
+          }
+        }
+        @keyframes scaleIn {
+          0% {
+            flex: 0;
+            transform: scale(0.0);
+            opacity: 0.0;
+          }
+          100% {
+            flex: 1;
+            transform: scale(0.5);
+            opacity: 0.5;
+          }
+        }
+
+        ol#list.decrement {
+          animation-timing-function: ${timing};
+          animation-name: decrement;
+          animation-duration: ${duration};
+        }
+        ol#list.decrement li#prev-preload {
+          animation-timing-function: ${timing};
+          animation-name: scaleIn;
+          animation-duration: ${duration};
+        }
+        ol#list.decrement li#prev {
+          animation-timing-function: ${timing};
+          animation-name: scaleUp;
+          animation-duration: ${duration};
+        }
+        ol#list.decrement li#current {
+          animation-timing-function: ${timing};
+          animation-name: scaleDown;
+          animation-duration: ${duration};
+        }
+        ol#list.decrement li#next {
+          animation-timing-function: ${timing};
+          animation-name: scaleOut;
+          animation-duration: ${duration};
+        }
+
+        ol#list.increment {
+          animation-timing-function: ${timing};
+          animation-name: increment;
+          animation-duration: ${duration};
+        }
+        ol#list.increment li#prev {
+          animation-timing-function: ${timing};
+          animation-name: scaleOut;
+          animation-duration: ${duration};
+        }
+        ol#list.increment li#current {
+          animation-timing-function: ${timing};
+          animation-name: scaleDown;
+          animation-duration: ${duration};
+        }
+        ol#list.increment li#next {
+          animation-timing-function: ${timing};
+          animation-name: scaleUp;
+          animation-duration: ${duration};
+        }
+        ol#list.increment li#next-preload {
+          animation-timing-function: ${timing};
+          animation-name: scaleIn;
+          animation-duration: ${duration};
+        }
+      }
+
+      @media (hover: none) and (pointer: coarse) { /* touch */
+        li#prev {
+          display: none;
+        }
+        li#next {
+          display: none;
+        }
+      }
+      </style>
       `;
     }
-
-    renderImages() {
-      const list = this.shadowRoot.getElementById("list");
-      list.innerHTML = "";
-      // TODO get current index and use with slice
-      // console.log(this.index, this.images);
-
-      const prevIndex = this.index - 1;
-      const prevLi = document.createElement("li");
-      const canClickPrev = (prevIndex > 0);
-      const shouldFetchPrev = !canClickPrev;
-      if (shouldFetchPrev) {
-        // fetch previous
-        console.log("fetching prev", "prevIndex", prevIndex);
-        this.prev();
+    renderList() {
+      return `
+      <ol id="list" class="${this.animation}">
+      ${this.renderImage("prev-preload", this.images[this.index - 2])}
+        ${this.renderImage("prev", this.images[this.index - 1])}
+        ${this.renderImage("current", this.images[this.index])}
+        ${this.renderImage("next", this.images[this.index + 1])}
+        ${this.renderImage("next-preload", this.images[this.index + 2])}
+      </ol>
+      `;
+    }
+    renderImage(id, image) {
+      if (image) {
+        return `
+        <li id="${id}">
+          <wc-photo
+            id="${id}-photo"
+            image="${image}"
+          ></wc-photo>
+        </li>
+        `;
+      } else {
+        return "";
       }
-      if (canClickPrev) {
-        prevLi.onclick = () => {
-          this.index = prevIndex;
-        };
-      }
-      const prev = document.createElement("wc-photo");
-      prev.image = this.images[prevIndex];
-      prevLi.appendChild(prev);
-      list.appendChild(prevLi);
-
-      const currentIndex = this.index;
-      const currentLi = document.createElement("li");
-      const current = document.createElement("wc-photo");
-      current.image = this.images[currentIndex];
-      currentLi.appendChild(current);
-      list.appendChild(currentLi);
-
-      const nextIndex = this.index + 1;
-      const nextLi = document.createElement("li");
-      const canClickNext = (nextIndex < this.images.length - 1);
-      const shouldFetchNext = !canClickNext;
-      if (shouldFetchNext) {
-        // fetch next
-        console.log("fetching next", "nextIndex", nextIndex);
-        this.next();
-      }
-      if (canClickNext) {
-        nextLi.onclick = () => {
-          console.log("clicked next");
-          this.index = nextIndex;
-        }
-      };
-      const next = document.createElement("wc-photo");
-      next.image = this.images[nextIndex];
-      nextLi.appendChild(next);
-      list.appendChild(nextLi);
+    }
+    render() {
+      this.shadowRoot.innerHTML = `
+        ${this.renderStyles()}
+        ${this.renderList()}
+      `;
     }
   }
 );

@@ -4,28 +4,39 @@ customElements.define(
     constructor() {
       super();
       this.attachShadow({ mode: "open" });
-      this._image = "";
+    }
+    static get observedAttributes() {
+      return ["image"];
     }
     set image(str) {
-      this._image = str;
+      this.setAttribute("image", str);
     }
     get image() {
-      return this._image;
+      return this.getAttribute("image");
     }
 
     async connectedCallback() {
       this.render();
     }
+    attributeChangedCallback(attrName, oldVal, newVal) {
+      this.render();
+    }
 
     render() {
-      this.shadowRoot.innerHTML = `
+      if (this.image && this.image !== "undefined") {
+        this.shadowRoot.innerHTML = `
         <style>
           img {
               width: 100%;
           }
         </style>
-        <img src="${this.image}"/>
-      `;
+        <img src="${this.image}" />
+        `;
+      } else {
+        this.shadowRoot.innerHTML = `
+        <b>no image</b>
+        `;
+      }
     }
   }
 );

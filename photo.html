@@ -4,19 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Photo</title>
-    <!--
-    <link rel="stylesheet" href="/index.css" />
-    -->
     <script type="module">
       import "/components/photo.js";
-
-      const photo = document.createElement("wc-photo");
-      photo.image = "https://placekitten.com/560/576";
-      document.getElementById("photo").replaceWith(photo);
     </script>
   </head>
 
   <body>
-    <template id="photo"></template>
+    <wc-photo image="https://placekitten.com/560/576"></wc-photo>
   </body>
 </html>
