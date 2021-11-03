@@ -9,6 +9,7 @@
       import "/components/photo-gallery.js";
 
       const photoGallery = document.getElementById("photo-gallery-dynamic");
+      photoGallery.focus();
       let catImagesAndFacts = [];
 
       const render = () => {
@@ -52,7 +53,7 @@
   </head>
 
   <body>
-    <wc-photo-gallery id="photo-gallery-dynamic">
+    <wc-photo-gallery id="photo-gallery-dynamic" tabindex="0">
     </wc-photo-gallery>
   </body>
 </html>

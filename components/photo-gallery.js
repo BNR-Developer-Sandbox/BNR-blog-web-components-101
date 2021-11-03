@@ -35,7 +35,7 @@ template.innerHTML = `
           width: 100%;
         }
         </style>
-        <div id="container">
+        <div id="container" >
           <wc-button id="prev">👈</wc-button>
           <slot id="photos"></slot>
           <wc-button id="next">👉</wc-button>
@@ -56,6 +56,7 @@ customElements.define(
       this.addEventListener("click", this.onclick);
       this.addEventListener("touchstart", this.ontouchstart);
       this.addEventListener("touchend", this.ontouchend);
+      this.addEventListener("keydown", this.onkeydown);
 
       if (!this.hasAttribute("index")) {
         this.index = 1;
@@ -113,6 +114,16 @@ customElements.define(
         this.increment();
       }
       this.touchStartX = null;
+    }
+
+    onkeydown(event) {
+      console.log(event.code);
+      if (event.code === "ArrowLeft") {
+        this.decrement();
+      }
+      if (event.code === "ArrowRight") {
+        this.increment();
+      }
     }
 
     increment() {
