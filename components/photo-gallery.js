@@ -96,7 +96,7 @@ customElements.define(
       console.log("photo-gallery.js: fetchPrev() - override to implement");
     }
 
-    fetchNext () {
+    fetchNext() {
       console.log("photo-gallery.js: fetchNext() - override to implement");
     }
 
@@ -109,6 +109,7 @@ customElements.define(
           flex: 1;
           align-items: center;
           width: 100%;
+          height: 100%;
         }
         @media (hover: none) and (pointer: coarse) { /* touch */
           #prev {

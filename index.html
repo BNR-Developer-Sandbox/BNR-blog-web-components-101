@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Photo Gallery</title>
+    <link rel="stylesheet" href="index.css" />
     <script type="module">
       import "/components/photo-gallery.js";
 
@@ -12,15 +13,17 @@
 
       const render = () => {
         photoGallery.innerHTML = `
-          ${catImagesAndFacts.map((item) => {
-            return `
+          ${catImagesAndFacts
+            .map((item) => {
+              return `
             <wc-photo-gallery-item
               image="${item.image}"
               fact="${item.fact}"
             >
             </wc-photo-gallery-item>
             `;
-          }).join("")}
+            })
+            .join("")}
         `;
       };
 
@@ -49,8 +52,7 @@
   </head>
 
   <body>
-    <wc-photo-gallery id="photo-gallery-dynamic">
-    </wc-photo-gallery>
+    <wc-photo-gallery id="photo-gallery-dynamic"> </wc-photo-gallery>
 
     <!--
     <wc-photo-gallery id="photo-gallery-static">
