@@ -8,12 +8,11 @@
       import "/components/photo-gallery.js";
 
       const photoGallery = document.getElementById("photo-gallery-dynamic");
+      let catImagesAndFacts = [];
 
-      (async () => {
-        const response = await fetch("/api/cats");
-        const json = await response.json();
+      const render = () => {
         photoGallery.innerHTML = `
-          ${json.map((item) => {
+          ${catImagesAndFacts.map((item) => {
             return `
             <wc-photo-gallery-item
               image="${item.image}"
@@ -23,21 +22,29 @@
             `;
           }).join("")}
         `;
-        // photoGallery.index = json.length / 2;
+      };
+
+      (async () => {
+        const response = await fetch("/api/cats");
+        const json = await response.json();
+        catImagesAndFacts = catImagesAndFacts.concat(json);
+        render();
       })();
 
-      // photoGallery.fetchPrev = async () => {
-      //   const response = await fetch("/api/cats");
-      //   const json = await response.json();
-      //   photoGallery.images = json.concat(photoGallery.images);
-      //   photoGallery.index = photoGallery.index + json.length;
-      // };
+      photoGallery.fetchPrev = async () => {
+        const response = await fetch("/api/cats");
+        const json = await response.json();
+        catImagesAndFacts = json.concat(catImagesAndFacts);
+        photoGallery.index = photoGallery.index + json.length + 1;
+        render();
+      };
 
-      // photoGallery.fetchNext = async () => {
-      //   const response = await fetch("/api/cats");
-      //   const json = await response.json();
-      //   photoGallery.images = photoGallery.images.concat(json);
-      // };
+      photoGallery.fetchNext = async () => {
+        const response = await fetch("/api/cats");
+        const json = await response.json();
+        catImagesAndFacts = catImagesAndFacts.concat(json);
+        render();
+      };
     </script>
   </head>
 

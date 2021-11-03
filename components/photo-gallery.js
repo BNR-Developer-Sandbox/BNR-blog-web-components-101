@@ -55,27 +55,22 @@ customElements.define(
     }
 
     ontouchstart(event) {
-      const current = this.shadowRoot.getElementById("current");
-      if (event.path.includes(current)) {
-        const { clientX } = event.changedTouches[0];
-        this.touchStartX = clientX;
-      }
+      const { clientX } = event.changedTouches[0];
+      this.touchStartX = clientX;
     }
     ontouchend(event) {
-      const current = this.shadowRoot.getElementById("current");
-      if (event.path.includes(current)) {
-        const { clientX } = event.changedTouches[0];
-        if (this.touchStartX < clientX) {
-          this.decrement();
-        } else {
-          this.increment();
-        }
-        this.touchStartX = null;
+      const { clientX } = event.changedTouches[0];
+      if (this.touchStartX < clientX) {
+        this.decrement();
+      } else {
+        this.increment();
       }
+      this.touchStartX = null;
     }
 
     increment() {
-      const max = this.images.length - 1;
+      const photos = this.shadowRoot.getElementById("photos");
+      const max = photos.assignedElements().length;
       const next = this.index + 1;
       const index = Math.min(max, next);
       if (index > this.index) {
@@ -86,7 +81,7 @@ customElements.define(
       }
     }
     decrement() {
-      const min = 0;
+      const min = 1;
       const prev = this.index - 1;
       const index = Math.max(min, prev);
       if (index < this.index) {
@@ -115,6 +110,14 @@ customElements.define(
           align-items: center;
           width: 100%;
         }
+        @media (hover: none) and (pointer: coarse) { /* touch */
+          #prev {
+            display: none;
+          }
+          #next {
+            display: none;
+          }
+        }
         #photos {
           display: flex;
           flex: 1;
@@ -131,9 +134,9 @@ customElements.define(
         }
         </style>
         <div id="container">
-          <wc-button>👈</wc-button>
+          <wc-button id="prev">👈</wc-button>
           <slot id="photos"></slot>
-          <wc-button>👉</wc-button>
+          <wc-button id="next">👉</wc-button>
         </div>
       `;
     }
