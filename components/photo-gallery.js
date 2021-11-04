@@ -3,50 +3,50 @@ import "./button.js";
 
 const template = document.createElement("template");
 template.innerHTML = `
-        <style id="style">
-        :host(:focus) {
-          outline: 0;
-          box-shadow: 0 0 80px 20px rgb(80, 90, 240, 0.7);
-          border: 1px solid rgb(120, 80, 240, 0.9);
-        }
-        #container {
-          display: flex;
-          flex-direction: row;
-          flex: 1;
-          align-items: center;
-          width: 100%;
-          height: 100%;
-        }
-        @media (hover: none) and (pointer: coarse) { /* touch */
-          #prev {
-            display: none;
-          }
-          #next {
-            display: none;
-          }
-        }
-        #photos {
-          display: flex;
-          flex: 1;
-          touch-action: pan-x pan-y;
-          overflow: hidden;
-        }
-        #photos::slotted(*) {
-          display: none;
-        }
-        #photos::slotted(:nth-child(1)) {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          width: 100%;
-        }
-        </style>
-        <div id="container" >
-          <wc-button id="prev">👈</wc-button>
-          <slot id="photos"></slot>
-          <wc-button id="next">👉</wc-button>
-        </div>
-      `;
+<style id="style">
+:host(:focus) {
+  outline: 0;
+  box-shadow: 0 0 80px 20px rgb(80, 90, 240, 0.7);
+  border: 1px solid rgb(120, 80, 240, 0.9);
+}
+#container {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+@media (hover: none) and (pointer: coarse) { /* touch */
+  #prev {
+    display: none;
+  }
+  #next {
+    display: none;
+  }
+}
+#photos {
+  display: flex;
+  flex: 1;
+  touch-action: pan-x pan-y;
+  overflow: hidden;
+}
+#photos::slotted(*) {
+  display: none;
+}
+#photos::slotted(:nth-child(1)) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+</style>
+<div id="container">
+  <wc-button id="prev">&#8678;</wc-button>
+  <slot id="photos"></slot>
+  <wc-button id="next">&#8680;</wc-button>
+</div>
+`;
 
 customElements.define(
   "wc-photo-gallery",
@@ -89,11 +89,11 @@ customElements.define(
       if (attrName === "index") {
         const style = this.shadowRoot.getElementById("style");
         const styleRule = [...style.sheet.cssRules].find(
-          (item) => item.selectorText && item.selectorText.includes("nth")
+          (item) => item.selectorText && item.selectorText.includes("#photos::slotted(:nth-child(")
         );
         styleRule.selectorText = styleRule.selectorText.replace(
-          `:nth-child(${oldVal})`,
-          `:nth-child(${newVal})`
+          `#photos::slotted(:nth-child(${oldVal})`,
+          `#photos::slotted(:nth-child(${newVal})`
         );
       }
     }

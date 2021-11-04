@@ -11,18 +11,15 @@
       const photoGallery = document.getElementById("photo-gallery");
       photoGallery.focus();
 
-      const renderItem = ({ image, fact }) => {
-        return `
-        <wc-photo-gallery-item
-          image="${image}"
-          fact="${fact}"
-        >
-        </wc-photo-gallery-item>
-        `;
-      };
+      const template = document.createElement("template");
+      template.innerHTML = `<wc-photo-gallery-item></wc-photo-gallery-item>`;
 
-      const render = (items) => {
-        return items.map((item) => renderItem(item)).join("");
+      const renderItem = ({ image, fact }) => {
+        const frag = template.content.cloneNode(true);
+        const el = frag.querySelector("wc-photo-gallery-item");
+        el.image = image;
+        el.fact = fact;
+        return frag;
       };
 
       const fetchCats = async () => {
@@ -33,18 +30,18 @@
 
       (async () => {
         const json = await fetchCats();
-        photoGallery.insertAdjacentHTML("afterbegin", render(json));
+        photoGallery.append(...json.map(renderItem));
       })();
 
       photoGallery.addEventListener("prev", async () => {
         const json = await fetchCats();
         photoGallery.index = photoGallery.index + json.length + 1;
-        photoGallery.insertAdjacentHTML("beforeend", render(json));
+        photoGallery.prepend(...json.map(renderItem));
       });
 
       photoGallery.addEventListener("next", async () => {
         const json = await fetchCats();
-        photoGallery.insertAdjacentHTML("afterbegin", render(json));
+        photoGallery.append(...json.map(renderItem));
       });
     </script>
   </head>
