@@ -14,17 +14,18 @@
       const nextButton = document.getElementById("next-button");
       photoGallery.focus();
 
-      photoGallery.addEventListener("prev", async () => {
-        prevButton.setAttribute("disabled", true);
-      });
-
-      photoGallery.addEventListener("next", async () => {
-        nextButton.setAttribute("disabled", true);
-      });
-
-      photoGallery.addEventListener("change", async () => {
-        prevButton.setAttribute("disabled", false);
+      photoGallery.addEventListener("decrement", async (e) => {
+        if (e.detail.lastItem) {
+          prevButton.setAttribute("disabled", true);
+        }
         nextButton.setAttribute("disabled", false);
+      });
+
+      photoGallery.addEventListener("increment", async (e) => {
+        if (e.detail.lastItem) {
+          nextButton.setAttribute("disabled", true);
+        }
+        prevButton.setAttribute("disabled", false);
       });
     </script>
   </head>
