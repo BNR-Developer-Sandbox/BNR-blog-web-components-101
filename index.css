@@ -7,13 +7,16 @@
   --color-black: #111827;
 }
 
-html {
+* {
   margin: 0;
   padding: 0;
-  background-color: var(--page-background-color);
-  font-family: "Roboto", sans-serif;
+  box-sizing: border-box;
 }
 
 body {
-  height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background-color: var(--page-background-color);
+  font-family: "Roboto", sans-serif;
 }
