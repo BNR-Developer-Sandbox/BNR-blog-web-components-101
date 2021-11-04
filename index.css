@@ -21,3 +21,9 @@ body {
   background-color: var(--page-background-color);
   font-family: "Roboto", sans-serif;
 }
+@media screen and (max-height: 800px) {
+  body {
+    min-height: 80vh;
+    align-items: flex-start;
+  }
+}

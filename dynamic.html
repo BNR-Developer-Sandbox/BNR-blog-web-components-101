@@ -10,45 +10,42 @@
 
       const photoGallery = document.getElementById("photo-gallery");
       photoGallery.focus();
-      let catImagesAndFacts = [];
 
-      const render = () => {
-        photoGallery.innerHTML = `
-          ${catImagesAndFacts
-            .map((item) => {
-              return `
-            <wc-photo-gallery-item
-              image="${item.image}"
-              fact="${item.fact}"
-            >
-            </wc-photo-gallery-item>
-            `;
-            })
-            .join("")}
+      const renderItem = ({ image, fact }) => {
+        return `
+        <wc-photo-gallery-item
+          image="${image}"
+          fact="${fact}"
+        >
+        </wc-photo-gallery-item>
         `;
       };
 
-      (async () => {
+      const render = (items) => {
+        return items.map((item) => renderItem(item)).join("");
+      };
+
+      const fetchCats = async () => {
         const response = await fetch("/api/cats");
         const json = await response.json();
-        catImagesAndFacts = catImagesAndFacts.concat(json);
-        render();
+        return json;
+      }
+
+      (async () => {
+        const json = await fetchCats();
+        photoGallery.insertAdjacentHTML("afterbegin", render(json));
       })();
 
-      photoGallery.fetchPrev = async () => {
-        const response = await fetch("/api/cats");
-        const json = await response.json();
-        catImagesAndFacts = json.concat(catImagesAndFacts);
+      photoGallery.addEventListener("prev", async () => {
+        const json = await fetchCats();
         photoGallery.index = photoGallery.index + json.length + 1;
-        render();
-      };
+        photoGallery.insertAdjacentHTML("beforeend", render(json));
+      });
 
-      photoGallery.fetchNext = async () => {
-        const response = await fetch("/api/cats");
-        const json = await response.json();
-        catImagesAndFacts = catImagesAndFacts.concat(json);
-        render();
-      };
+      photoGallery.addEventListener("next", async () => {
+        const json = await fetchCats();
+        photoGallery.insertAdjacentHTML("afterbegin", render(json));
+      });
     </script>
   </head>
 

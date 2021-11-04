@@ -4,9 +4,6 @@ import "./button.js";
 const template = document.createElement("template");
 template.innerHTML = `
         <style id="style">
-        :host {
-          touch-action: pan-x;
-        }
         :host(:focus) {
           outline: 0;
           box-shadow: 0 0 80px 20px rgb(80, 90, 240, 0.7);
@@ -31,6 +28,7 @@ template.innerHTML = `
         #photos {
           display: flex;
           flex: 1;
+          touch-action: pan-x pan-y;
           overflow: hidden;
         }
         #photos::slotted(*) {
@@ -55,20 +53,26 @@ customElements.define(
   class extends HTMLElement {
     constructor() {
       super();
-      this.attachShadow({ mode: "open" });
-
-      this.shadowRoot.appendChild(template.content.cloneNode(true));
 
       this.touchStartX = null;
+
+      this.attachShadow({ mode: "open" });
+      this.shadowRoot.appendChild(template.content.cloneNode(true));
+
+      if (!this.hasAttribute("index")) {
+        this.index = 1;
+      }
 
       this.addEventListener("click", this.onclick);
       this.addEventListener("touchstart", this.ontouchstart);
       this.addEventListener("touchend", this.ontouchend);
       this.addEventListener("keydown", this.onkeydown);
-
-      if (!this.hasAttribute("index")) {
-        this.index = 1;
-      }
+    }
+    disconnectedCallback() {
+      this.removeEventListener("click", this.onclick);
+      this.removeEventListener("touchstart", this.ontouchstart);
+      this.removeEventListener("touchend", this.ontouchend);
+      this.removeEventListener("keydown", this.onkeydown);
     }
 
     static get observedAttributes() {
@@ -92,11 +96,6 @@ customElements.define(
           `:nth-child(${newVal})`
         );
       }
-    }
-    disconnectedCallback() {
-      this.removeEventListener("click", this.onclick);
-      this.removeEventListener("touchstart", this.ontouchstart);
-      this.removeEventListener("touchend", this.ontouchend);
     }
 
     onclick(event) {
@@ -142,7 +141,7 @@ customElements.define(
         this.index = index;
       }
       if (next >= max) {
-        this.fetchNext();
+        this.dispatchEvent(new CustomEvent("next"));
       }
     }
     decrement() {
@@ -153,16 +152,8 @@ customElements.define(
         this.index = index;
       }
       if (prev <= min) {
-        this.fetchPrev();
+        this.dispatchEvent(new CustomEvent("prev"));
       }
-    }
-
-    fetchPrev() {
-      console.log("photo-gallery.js: fetchPrev() - override to implement");
-    }
-
-    fetchNext() {
-      console.log("photo-gallery.js: fetchNext() - override to implement");
     }
   }
 );
