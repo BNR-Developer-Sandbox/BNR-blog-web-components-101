@@ -21,8 +21,8 @@ customElements.define(
     static get observedAttributes() {
       return ["disabled"];
     }
-    set disabled(str) {
-      this.setAttribute("disabled", str);
+    set disabled(bool) {
+      this.setAttribute("disabled", bool.toString());
     }
     get disabled() {
       return this.getAttribute("disabled");

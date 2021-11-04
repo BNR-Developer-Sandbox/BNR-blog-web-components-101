@@ -16,16 +16,16 @@
 
       photoGallery.addEventListener("decrement", async (e) => {
         if (e.detail.lastItem) {
-          prevButton.setAttribute("disabled", true);
+          prevButton.disabled = true;
         }
-        nextButton.setAttribute("disabled", false);
+        nextButton.disabled = false;
       });
 
       photoGallery.addEventListener("increment", async (e) => {
         if (e.detail.lastItem) {
-          nextButton.setAttribute("disabled", true);
+          nextButton.disabled = true;
         }
-        prevButton.setAttribute("disabled", false);
+        prevButton.disabled = false;
       });
     </script>
   </head>
