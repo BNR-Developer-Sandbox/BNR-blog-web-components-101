@@ -2,7 +2,9 @@ const template = document.createElement("template");
 template.innerHTML = `
   <style>
     p {
-        width: 100%;
+      box-sizing: border-box;
+      padding: 1em;
+      width: 100%;
     }
   </style>
   <p id="fact">Default Fact</p>
