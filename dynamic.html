@@ -26,22 +26,26 @@
         const response = await fetch("/api/cats");
         const json = await response.json();
         return json;
-      }
+      };
 
       (async () => {
         const json = await fetchCats();
         photoGallery.append(...json.map(renderItem));
       })();
 
-      photoGallery.addEventListener("prev", async () => {
-        const json = await fetchCats();
-        photoGallery.index = photoGallery.index + json.length + 1;
-        photoGallery.prepend(...json.map(renderItem));
+      photoGallery.addEventListener("decrement", async (e) => {
+        if (e.detail.lastItem) {
+          const json = await fetchCats();
+          photoGallery.index = photoGallery.index + json.length + 1;
+          photoGallery.prepend(...json.map(renderItem));
+        }
       });
 
-      photoGallery.addEventListener("next", async () => {
-        const json = await fetchCats();
-        photoGallery.append(...json.map(renderItem));
+      photoGallery.addEventListener("increment", async (e) => {
+        if (e.detail.lastItem) {
+          const json = await fetchCats();
+          photoGallery.append(...json.map(renderItem));
+        }
       });
 
       // TODO remove event listeners
@@ -49,7 +53,6 @@
   </head>
 
   <body>
-    <wc-photo-gallery id="photo-gallery" tabindex="0">
-    </wc-photo-gallery>
+    <wc-photo-gallery id="photo-gallery" tabindex="0"> </wc-photo-gallery>
   </body>
 </html>

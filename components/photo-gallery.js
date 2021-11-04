@@ -142,25 +142,31 @@ customElements.define(
       const max = photos.assignedElements().length;
       const next = this.index + 1;
       const index = Math.min(max, next);
+      let lastItem = false;
       if (index > this.index) {
         this.index = index;
-        this.dispatchEvent(new CustomEvent("change"));
       }
       if (next >= max) {
-        this.dispatchEvent(new CustomEvent("next"));
+        lastItem = true;
       }
+      this.dispatchEvent(
+        new CustomEvent("increment", { detail: { lastItem } })
+      );
     }
     decrement() {
       const min = 1;
       const prev = this.index - 1;
       const index = Math.max(min, prev);
+      let lastItem = false;
       if (index < this.index) {
         this.index = index;
-        this.dispatchEvent(new CustomEvent("change"));
       }
       if (prev <= min) {
-        this.dispatchEvent(new CustomEvent("prev"));
+        lastItem = true;
       }
+      this.dispatchEvent(
+        new CustomEvent("decrement", { detail: { lastItem } })
+      );
     }
   }
 );
