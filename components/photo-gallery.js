@@ -4,8 +4,10 @@ import "./button.js";
 const template = document.createElement("template");
 template.innerHTML = `
         <style id="style">
-        ::focus {
-          background-color: hotpink;
+        :host(:focus) {
+          outline: 0;
+          box-shadow: 0 0 20px 20px rgba(80, 200, 240, 0.7);
+          border: 1px solid rgba(80, 200, 240, 0.9);
         }
         #container {
           display: flex;
