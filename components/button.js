@@ -30,8 +30,7 @@ customElements.define(
 
     attributeChangedCallback(attrName, oldVal, newVal) {
       if (attrName === "disabled") {
-        this.shadowRoot.getElementById("button").disabled =
-          newVal === "true" ? true : false;
+        this.shadowRoot.getElementById("button").disabled = newVal === "true";
       }
     }
   }
