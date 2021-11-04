@@ -6,7 +6,7 @@ template.innerHTML = `
       cursor: pointer;
     }
   </style>
-  <button><slot></slot></button>
+  <button id="button"><slot></slot></button>
 `;
 
 customElements.define(
@@ -16,6 +16,23 @@ customElements.define(
       super();
       this.attachShadow({ mode: "open" });
       this.shadowRoot.appendChild(template.content.cloneNode(true));
+    }
+
+    static get observedAttributes() {
+      return ["disabled"];
+    }
+    set disabled(str) {
+      this.setAttribute("disabled", str);
+    }
+    get disabled() {
+      return this.getAttribute("disabled");
+    }
+
+    attributeChangedCallback(attrName, oldVal, newVal) {
+      if (attrName === "disabled") {
+        this.shadowRoot.getElementById("button").disabled =
+          newVal === "true" ? true : false;
+      }
     }
   }
 );
