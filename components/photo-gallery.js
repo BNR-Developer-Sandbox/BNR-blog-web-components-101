@@ -157,15 +157,15 @@ customElements.define(
       const min = 1;
       const prev = this.index - 1;
       const index = Math.max(min, prev);
-      let lastItem = false;
+      let firstItem = false;
       if (index < this.index) {
         this.index = index;
       }
       if (prev <= min) {
-        lastItem = true;
+        firstItem = true;
       }
       this.dispatchEvent(
-        new CustomEvent("decrement", { detail: { lastItem } })
+        new CustomEvent("decrement", { detail: { firstItem } })
       );
     }
   }

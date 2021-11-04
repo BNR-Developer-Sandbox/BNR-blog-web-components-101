@@ -15,7 +15,7 @@
       photoGallery.focus();
 
       photoGallery.addEventListener("decrement", async (e) => {
-        if (e.detail.lastItem) {
+        if (e.detail.firstItem) {
           prevButton.disabled = true;
         }
         nextButton.disabled = false;

@@ -34,7 +34,7 @@
       })();
 
       photoGallery.addEventListener("decrement", async (e) => {
-        if (e.detail.lastItem) {
+        if (e.detail.firstItem) {
           const json = await fetchCats();
           photoGallery.index = photoGallery.index + json.length + 1;
           photoGallery.prepend(...json.map(renderItem));
