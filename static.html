@@ -7,11 +7,33 @@
     <link rel="stylesheet" href="index.css" />
     <script type="module">
       import "/components/photo-gallery.js";
+      import "/components/button.js";
+
+      let prevDisabled = false;
+      let nextDisabled = true;
+
+      const photoGallery = document.getElementById("photo-gallery");
+      const prevButton = document.getElementById("prev-button");
+      const nextButton = document.getElementById("next-button");
+      photoGallery.focus();
+
+      photoGallery.addEventListener("prev", async () => {
+        prevButton.setAttribute("disabled", true);
+      });
+
+      photoGallery.addEventListener("next", async () => {
+        nextButton.setAttribute("disabled", true);
+      });
+
+      photoGallery.addEventListener("change", async () => {
+        prevButton.setAttribute("disabled", false);
+        nextButton.setAttribute("disabled", false);
+      });
     </script>
   </head>
 
   <body>
-    <wc-photo-gallery>
+    <wc-photo-gallery id="photo-gallery" tabindex="0">
       <wc-photo-gallery-item
         image="https://placekitten.com/400/400"
         fact="While many cats enjoy milk, it will give some cats diarrhea."
@@ -27,6 +49,12 @@
         fact="Cats step with both left legs, then both right legs when they walk or run."
       >
       </wc-photo-gallery-item>
+      <wc-button slot="prev-button" id="prev-button" disabled="true"
+        >&#706;</wc-button
+      >
+      <wc-button slot="next-button" id="next-button" disabled="false"
+        >&#707;</wc-button
+      >
     </wc-photo-gallery>
   </body>
 </html>

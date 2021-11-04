@@ -45,9 +45,9 @@ template.innerHTML = `
 }
 </style>
 <div id="container">
-  <wc-button id="prev">&#8678;</wc-button>
+  <slot name="prev-button" id="prev"><wc-button>&#8678;</wc-button></slot>
   <slot id="photos"></slot>
-  <wc-button id="next">&#8680;</wc-button>
+  <slot name="next-button" id="next"><wc-button>&#8680;</wc-button></slot>
 </div>
 `;
 
@@ -92,7 +92,9 @@ customElements.define(
       if (attrName === "index") {
         const style = this.shadowRoot.getElementById("style");
         const styleRule = [...style.sheet.cssRules].find(
-          (item) => item.selectorText && item.selectorText.includes("#photos::slotted(:nth-child(")
+          (item) =>
+            item.selectorText &&
+            item.selectorText.includes("#photos::slotted(:nth-child(")
         );
         styleRule.selectorText = styleRule.selectorText.replace(
           `#photos::slotted(:nth-child(${oldVal})`,
@@ -142,6 +144,7 @@ customElements.define(
       const index = Math.min(max, next);
       if (index > this.index) {
         this.index = index;
+        this.dispatchEvent(new CustomEvent("change"));
       }
       if (next >= max) {
         this.dispatchEvent(new CustomEvent("next"));
@@ -153,6 +156,7 @@ customElements.define(
       const index = Math.max(min, prev);
       if (index < this.index) {
         this.index = index;
+        this.dispatchEvent(new CustomEvent("change"));
       }
       if (prev <= min) {
         this.dispatchEvent(new CustomEvent("prev"));
