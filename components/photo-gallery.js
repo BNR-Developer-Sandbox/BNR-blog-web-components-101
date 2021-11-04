@@ -7,10 +7,10 @@ template.innerHTML = `
 :host {
   width: 100%;
 }
-:host(:focus) {
+:host(:focus-within) {
   outline: 0;
-  box-shadow: 0 0 80px 20px rgb(80, 90, 240, 0.7);
-  border: 1px solid rgb(120, 80, 240, 0.9);
+  box-shadow: 0 0 80px 20px rgba(80, 90, 240, 0.7);
+  border: 1px solid rgba(120, 80, 240, 0.9);
 }
 #container {
   display: flex;
