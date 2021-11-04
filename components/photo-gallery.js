@@ -4,6 +4,9 @@ import "./button.js";
 const template = document.createElement("template");
 template.innerHTML = `
 <style id="style">
+:host {
+  width: 100%;
+}
 :host(:focus) {
   outline: 0;
   box-shadow: 0 0 80px 20px rgb(80, 90, 240, 0.7);
