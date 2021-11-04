@@ -25,7 +25,7 @@ customElements.define(
       this.setAttribute("disabled", bool.toString());
     }
     get disabled() {
-      return this.getAttribute("disabled");
+      return this.getAttribute("disabled") === "true";
     }
 
     attributeChangedCallback(attrName, oldVal, newVal) {
