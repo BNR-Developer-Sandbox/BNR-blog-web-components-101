@@ -4,6 +4,9 @@ import "./button.js";
 const template = document.createElement("template");
 template.innerHTML = `
         <style id="style">
+        ::focus {
+          background-color: hotpink;
+        }
         #container {
           display: flex;
           flex-direction: row;
@@ -117,7 +120,6 @@ customElements.define(
     }
 
     onkeydown(event) {
-      console.log(event.code);
       if (event.code === "ArrowLeft") {
         this.decrement();
       }
