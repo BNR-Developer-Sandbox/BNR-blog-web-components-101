@@ -65,7 +65,8 @@ customElements.define(
       if (!this.hasAttribute("index")) {
         this.index = 1;
       }
-
+    }
+    connectedCallback() {
       this.addEventListener("click", this.onclick);
       this.addEventListener("touchstart", this.ontouchstart);
       this.addEventListener("touchend", this.ontouchend);
