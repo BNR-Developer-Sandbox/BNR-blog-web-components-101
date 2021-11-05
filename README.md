@@ -1,13 +1,14 @@
-# Getting Started
+# Web Component Photo Gallery
 
-## Install dependencies:
+## Viewing the Gallery
 
-```
-npm install
-```
+The photo gallery is deployed on netlify: [https://bnr-blog-web-components-101.netlify.app/](https://bnr-blog-web-components-101.netlify.app/) 
 
-## Start Netlify Dev
+## Running the Gallery Locally
 
-```
-npm start
-```
+1. Install dependencies: `npm install`
+2. Start Netlify Dev: `npm start`
+
+## Learning about Web Components and Building the Gallery
+
+Learn more in our blog post: [https://bignerdranch.com/resources/blog/](https://bignerdranch.com/resources/blog/) (Coming Soon)
