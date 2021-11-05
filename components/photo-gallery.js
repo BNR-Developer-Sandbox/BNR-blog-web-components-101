@@ -107,10 +107,10 @@ customElements.define(
     onclick(event) {
       const prev = this.shadowRoot.getElementById("prev");
       const next = this.shadowRoot.getElementById("next");
-      if (event.path.includes(prev)) {
+      if (event.composedPath().includes(prev)) {
         this.decrement();
       }
-      if (event.path.includes(next)) {
+      if (event.composedPath().includes(next)) {
         this.increment();
       }
     }
